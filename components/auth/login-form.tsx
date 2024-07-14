@@ -16,56 +16,79 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { FormStatus } from "../form-status";
+import { login } from "@/actions/login";
 
 export default function LoginForm() {
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
   });
 
-  function onSubmit(values: z.infer<typeof LoginSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof LoginSchema>) {
+
+    try {
+      const data = await login(values);
+
+      if(data && data.error){
+        form.setError("root",{message:data.error});
+      }
+      
+    } catch (error) {
+      form.setError("root",{message:"Something Went Wrong!"})
+    }
+
+
+   
   }
 
   return (
     <CardWrapper
       cardTitle="Login"
-      cardDesc="Welcome Back! Login Here"
+      cardDesc="Welcome Back!"
       footerText="Don't have an account? Register Here."
-      redirectURL="/signup"
+      redirectURL="/register"
     >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className=" flex flex-col space-y-2 text-left">
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel> Email </FormLabel>
-                    <FormControl>
-                      <Input placeholder="your.email@example.com" {...field} type="email" />
-                    </FormControl>
-                    
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel> Password </FormLabel>
-                    <FormControl>
-                      <Input placeholder="password" {...field} type="password" />
-                    </FormControl>
-                    
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+        <form onSubmit={form.handleSubmit(onSubmit)} className="">
+          <div className=" flex flex-col space-y-2 text-left mb-3">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel> Email </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="your.email@example.com"
+                      {...field}
+                      type="email"
+                    />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel> Password </FormLabel>
+                  <FormControl>
+                    <Input placeholder="Password" {...field} type="password" />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          <FormStatus type="success" message={form.formState.isSubmitSuccessful ? "Login Successful!":""} />
+          <FormStatus type="error" message={form.formState.errors.root?.message} />
           </div>
-          <Button type="submit" className="">Submit</Button>
+          <Button disabled={form.formState.isSubmitting} type="submit" className="">
+            Submit
+          </Button>
         </form>
       </Form>
     </CardWrapper>
