@@ -6,7 +6,7 @@ export async function AppBar() {
   const session = await auth();
   return (
     <>
-      <header className="text-gray-600 body-font">
+      <header className="text-gray-600 border-b-2 border-b-gray-300 body-font">
         <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
           <Link
             className="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0"

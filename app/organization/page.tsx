@@ -4,7 +4,9 @@ export default function JoinOrg(){
 
     return(
         <>
-        <JoinOrgForm />
+        <div className="bg-gray-200">
+            <JoinOrgForm />
+        </div>
         </>
     )
 }
