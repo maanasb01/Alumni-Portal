@@ -21,7 +21,7 @@ import { Social } from "./social";
   }
   
 
-export default function CardWrapper({cardTitle,cardDesc,footerText,redirectURL, children}:CardWrapperProps){
+export default function AuthCardWrapper({cardTitle,cardDesc,footerText,redirectURL, children}:CardWrapperProps){
 
     return(
         <Card className="text-center w-1/3 mx-auto text-sm 2xl:mt-20">

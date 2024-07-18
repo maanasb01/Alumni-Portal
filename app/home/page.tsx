@@ -1,13 +1,15 @@
 import { auth, signOut } from '@/auth'
+import { getUserById } from '@/data/user';
 import React from 'react'
 
 
 export default async function Home() {
 
     const session = await auth();
+
   return (
     <div>
-      {JSON.stringify(session)}
+      {JSON.stringify(session?.user)}
       
       <form action={async()=>{
         "use server";

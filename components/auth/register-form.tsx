@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import CardWrapper from "./card-wrapper";
+import AuthCardWrapper from "./auth-card-wrapper";
 import { RegisterSchema } from "@/schemas/authSchema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -45,7 +45,7 @@ export default function RegisterForm() {
   }
 
   return (
-    <CardWrapper cardTitle="Register" cardDesc="Signup Here" footerText="Already Registered? Login Here" redirectURL="/login">
+    <AuthCardWrapper cardTitle="Register" cardDesc="Signup Here" footerText="Already Registered? Login Here" redirectURL="/login">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="">
           <div className=" flex flex-col space-y-2 text-left mb-3">
@@ -113,7 +113,7 @@ export default function RegisterForm() {
           </Button>
         </form>
       </Form>
-    </CardWrapper>
+    </AuthCardWrapper>
   );
 }
 

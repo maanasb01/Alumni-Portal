@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import CardWrapper from "./card-wrapper";
+import AuthCardWrapper from "./auth-card-wrapper";
 import { LoginSchema } from "@/schemas/authSchema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -23,6 +22,7 @@ export default function LoginForm() {
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
   });
+  
 
   async function onSubmit(values: z.infer<typeof LoginSchema>) {
 
@@ -42,7 +42,7 @@ export default function LoginForm() {
   }
 
   return (
-    <CardWrapper
+    <AuthCardWrapper
       cardTitle="Login"
       cardDesc="Welcome Back!"
       footerText="Don't have an account? Register Here."
@@ -91,6 +91,6 @@ export default function LoginForm() {
           </Button>
         </form>
       </Form>
-    </CardWrapper>
+    </AuthCardWrapper>
   );
 }
