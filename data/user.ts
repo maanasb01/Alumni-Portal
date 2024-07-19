@@ -11,20 +11,21 @@ const userSelectProperties={
     image: true,
     isRegistered: true,
     organizationId: true,
-    organization: true,
+    organization: {select:{name:true,city:true,state:true,country:true}},
     degree: true,
     degreeId: true,
     EmploymentHistory: true,
     FamilyMembers: true,
     createdAt: true,
-    emailVerified:true
+    emailVerified:true,
+  
   }
 
 export async function getUserByEmail(email:string){
 
     try {
        
-        const user = await db.user.findUnique({where:{email},select:userSelectProperties});
+        const user = await db.user.findUnique({where:{email},select:{...userSelectProperties,password:true}});
         return user;
         
     } catch (error) {

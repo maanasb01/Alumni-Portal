@@ -7,6 +7,7 @@ import {
   CombinedJoinSchema,
   ExtendedJoinOrgSchema,
 } from "@/schemas/orgSchema";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 export async function createjoinOrganization(
@@ -23,6 +24,9 @@ export async function createjoinOrganization(
   const { name, type, country, state, city } = validatedFields.data;
 
   try {
+    if(session?.user.isRegistered){
+      throw new Error("User already is registered to an organization!")
+    }
     const results = await db.$transaction(async (prisma) => {
       const newOrg = await prisma.organization.create({
         data: {
@@ -41,6 +45,7 @@ export async function createjoinOrganization(
           isRegistered:true,
         },
       });
+      revalidatePath('/organization');
     });
   } catch (error) {
     throw error;
@@ -61,6 +66,9 @@ export async function joinOrganization(
   const { organization } = validatedFields.data;
 
   try {
+    if(session?.user.isRegistered){
+      throw new Error("User already is registered to an organization!")
+    }
     const updatedUser = await db.user.update({
       where: { id: session?.user?.id },
       data: {
@@ -68,7 +76,28 @@ export async function joinOrganization(
         isRegistered:true,
       },
     });
+    revalidatePath('/organization');
   } catch (error) {
     throw error;
+  }
+}
+
+export async function leaveOrganization(){
+  const session = await auth();
+
+  try {
+    if(!session?.user.isRegistered){
+      throw new Error("User dont have any organization to leave!")
+    }
+    await db.user.update({
+      where:{id:session?.user.id},
+      data:{
+        organizationId:null,
+        isRegistered:false
+      }
+    });
+    revalidatePath('/organization');
+  } catch (error) {
+    console.log(error)
   }
 }

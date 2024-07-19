@@ -4,11 +4,14 @@ import { db } from "./lib/db";
 import authConfig from "./auth.config";
 import { getUserById } from "./data/user";
 import {
+  City,
+  Country,
   Degree,
   EmploymentHistory,
   FamilyMember,
   Organization,
   Prisma,
+  State,
   User,
 } from "@prisma/client";
 
@@ -29,7 +32,7 @@ type UserSelectKeys =
   | "FamilyMembers";
 
 type SessionUser = User & {
-  organization: Organization | null;
+  organization: { name:string,country: Country; state: State; city: City } | null;
   degree: Degree | null;
   EmploymentHistory: EmploymentHistory[] | null;
   FamilyMembers: FamilyMember[] | null;

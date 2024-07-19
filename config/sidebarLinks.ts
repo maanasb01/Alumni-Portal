@@ -4,14 +4,14 @@ import { FaRegUserCircle } from "react-icons/fa";
 
 export const sidebarLinks = [
   {
-    name: "Organization",
-    icon: RiCommunityLine,
-    href: "/organization",
-  },
-  {
     name: "Home",
     icon: RiHome3Line,
     href: "/home",
+  },
+  {
+    name: "Organization",
+    icon: RiCommunityLine,
+    href: "/organization",
   },
   {
     name: "Profile",
