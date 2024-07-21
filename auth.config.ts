@@ -1,7 +1,7 @@
 import { type NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { LoginSchema } from "./schemas/authSchema";
-import { getUserByEmail } from "./data/user";
+import { getUserByEmailForAuth } from "./data/user";
 import bcrypt from "bcryptjs";
 
 export default {
@@ -13,7 +13,7 @@ export default {
 
           if (validatedData.success) {
             const { email, password } = validatedData.data;
-            const user = await getUserByEmail(email);
+            const user = await getUserByEmailForAuth(email);
             // User still exists and might not have password if created account using oAuth providers like Google,
             // In that case, we dont want to authenticate the user with credentials provider.
             if (!user || !user.password) return null;

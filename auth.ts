@@ -3,44 +3,11 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "./lib/db";
 import authConfig from "./auth.config";
 import { getUserById } from "./data/user";
-import {
-  City,
-  Country,
-  Degree,
-  EmploymentHistory,
-  FamilyMember,
-  Organization,
-  Prisma,
-  State,
-  User,
-} from "@prisma/client";
-
-// Properties returned by the getUserById function
-type UserSelectKeys =
-  | "name"
-  | "organization"
-  | "id"
-  | "degree"
-  | "EmploymentHistory"
-  | "email"
-  | "image"
-  | "createdAt"
-  | "isRegistered"
-  | "organizationId"
-  | "phone"
-  | "degreeId"
-  | "FamilyMembers";
-
-type SessionUser = User & {
-  organization: { name:string,country: Country; state: State; city: City } | null;
-  degree: Degree | null;
-  EmploymentHistory: EmploymentHistory[] | null;
-  FamilyMembers: FamilyMember[] | null;
-};
+import { SessionUser } from "./types/user";
 
 declare module "next-auth" {
   interface Session {
-    user: Pick<SessionUser, UserSelectKeys>;
+    user: SessionUser;
   }
 }
 

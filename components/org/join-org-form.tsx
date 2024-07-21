@@ -1,14 +1,6 @@
 "use client";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { ReactNode, useCallback, useEffect, useState } from "react";
 
+import { useEffect, useState } from "react";
 import {
   Form,
   FormControl,
@@ -21,18 +13,17 @@ import { useForm, useWatch } from "react-hook-form";
 import { Input } from "../ui/input";
 import { FormStatus } from "../form-status";
 import { Button } from "../ui/button";
-import AsyncSelect, { useAsync } from "react-select/async";
 import Select from "react-select";
 import { BaseJoinOrgSchema, ExtendedJoinOrgSchema } from "@/schemas/orgSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { searchCountries } from "@/data/country";
-import debounce from "lodash.debounce";
 import { GenericSelect } from "./generic-select";
 import { searchStates } from "@/data/state";
 import { searchCities } from "@/data/city";
 import { searchOrganizations } from "@/data/organization";
 import { createjoinOrganization, joinOrganization } from "@/actions/joinOrg";
+import { CardWrapper } from "../card-wrapper";
 
 export function JoinOrgForm() {
   const [schema, setSchema] = useState<
@@ -69,7 +60,7 @@ export function JoinOrgForm() {
   useEffect(() => {
     if (organizationVal?.value === "other") {
       setSchema(ExtendedJoinOrgSchema);
-    }else{
+    } else {
       setSchema(BaseJoinOrgSchema);
     }
   }, [organizationVal]);
@@ -88,18 +79,23 @@ export function JoinOrgForm() {
     }
   }, [stateVal]);
 
-  async function onSubmit(values:z.infer<typeof BaseJoinOrgSchema | typeof ExtendedJoinOrgSchema>) {
-    console.log(JSON.stringify(values));
+  async function onSubmit(
+    values: z.infer<typeof BaseJoinOrgSchema | typeof ExtendedJoinOrgSchema>
+  ) {
 
     try {
       if (schema === ExtendedJoinOrgSchema) {
-        const data = await createjoinOrganization(values as z.infer<typeof ExtendedJoinOrgSchema>);
+        const data = await createjoinOrganization(
+          values as z.infer<typeof ExtendedJoinOrgSchema>
+        );
 
         if (data && data.error) {
           form.setError("root", { message: data.error });
         }
-      }else{
-        const data = await joinOrganization(values as z.infer<typeof BaseJoinOrgSchema>);
+      } else {
+        const data = await joinOrganization(
+          values as z.infer<typeof BaseJoinOrgSchema>
+        );
         if (data && data.error) {
           form.setError("root", { message: data.error });
         }
@@ -118,128 +114,116 @@ export function JoinOrgForm() {
   return (
     isMounted && (
       <>
-        <Card className="text-center">
-          <CardHeader>
-            <CardTitle>Join an Organization</CardTitle>
+        <CardWrapper className="text-center" cardTitle="Join an Organization">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="">
+              <div className=" flex flex-col space-y-2 text-left mb-3">
+                <GenericSelect
+                  label="Select Organization"
+                  placeholder="Search Organization"
+                  form={form}
+                  searchFunction={searchOrganizations as any}
+                  customDefaultOptions={[{ value: "other", label: "Other" }]}
+                  name="organization"
+                />
 
-            <CardDescription></CardDescription>
-          </CardHeader>
+                {schema === ExtendedJoinOrgSchema && (
+                  <>
+                    <div className="text-center font-semibold text-sm">
+                      Register an Organization
+                    </div>
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel> Organization Name </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Organization Name"
+                              {...field}
+                              type="text"
+                            />
+                          </FormControl>
 
-          <CardContent>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="">
-                <div className=" flex flex-col space-y-2 text-left mb-3">
-                  
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  <GenericSelect
-                    label="Select Organization"
-                    placeholder="Search Organization"
-                    form={form}
-                    searchFunction={searchOrganizations as any}
-                    customDefaultOptions={[{ value: "other", label: "Other" }]}
-                    name="organization"
-                  />
+                    <FormField
+                      control={form.control}
+                      name="type"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel> Organization Type </FormLabel>
+                          <FormControl>
+                            <Select
+                              id={id}
+                              placeholder="Organization Type"
+                              {...field}
+                              options={ExtendedJoinOrgSchema.shape.type.shape.value.options.map(
+                                (t) => ({ value: t, label: t })
+                              )}
+                            />
+                          </FormControl>
 
-                  {schema === ExtendedJoinOrgSchema && (
-                    <>
-                      <div className="text-center font-semibold text-sm">
-                        Register an Organization
-                      </div>
-                      <FormField
-                        control={form.control}
-                        name="name"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel> Organization Name </FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="Organization Name"
-                                {...field}
-                                type="text"
-                              />
-                            </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                    <GenericSelect
+                      label="Organization Country"
+                      placeholder="Search Country"
+                      form={form}
+                      searchFunction={searchCountries}
+                      name="country"
+                    />
 
-                      <FormField
-                        control={form.control}
-                        name="type"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel> Organization Type </FormLabel>
-                            <FormControl>
-                              <Select
-                                id={id}
-                                placeholder="Organization Type"
-                                {...field}
-                                options={ExtendedJoinOrgSchema.shape.type.shape.value.options.map(
-                                  (t) => ({ value: t, label: t })
-                                )}
-                              />
-                            </FormControl>
+                    <GenericSelect
+                      label="Organization State"
+                      placeholder="Search State"
+                      form={form}
+                      searchFunction={searchStates as any} // as the types (query,countryId?,stateId?) and (query,countryId) dont match
+                      countryId={countryVal?.value}
+                      name="state"
+                      isDisabled={!!!countryVal}
+                    />
 
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <GenericSelect
-                        label="Organization Country"
-                        placeholder="Search Country"
-                        form={form}
-                        searchFunction={searchCountries}
-                        name="country"
-                      />
-
-                      <GenericSelect
-                        label="Organization State"
-                        placeholder="Search State"
-                        form={form}
-                        searchFunction={searchStates as any} // as the types (query,countryId?,stateId?) and (query,countryId) dont match
-                        countryId={countryVal?.value}
-                        name="state"
-                        isDisabled={!!!countryVal}
-                      />
-
-                      <GenericSelect
-                        label="Organization City"
-                        placeholder="Search City"
-                        form={form}
-                        searchFunction={searchCities as any}
-                        countryId={countryVal?.value}
-                        stateId={stateVal?.value}
-                        name="city"
-                        isDisabled={!!!countryVal || !!!stateVal}
-                      />
-                    </>
-                  )}
-                  <FormStatus
-                    type="success"
-                    message={
-                      form.formState.isSubmitSuccessful ? "Successful!" : ""
-                    }
-                  />
-                  <FormStatus
-                    type="error"
-                    message={form.formState.errors.root?.message}
-                  />
-                </div>
-                <Button
-                  disabled={form.formState.isSubmitting}
-                  type="submit"
-                  className=""
-                >
-                  Submit
-                </Button>
-              </form>
-            </Form>
-          </CardContent>
-
-          <CardFooter></CardFooter>
-        </Card>
+                    <GenericSelect
+                      label="Organization City"
+                      placeholder="Search City"
+                      form={form}
+                      searchFunction={searchCities as any}
+                      countryId={countryVal?.value}
+                      stateId={stateVal?.value}
+                      name="city"
+                      isDisabled={!!!countryVal || !!!stateVal}
+                    />
+                  </>
+                )}
+                <FormStatus
+                  type="success"
+                  message={
+                    form.formState.isSubmitSuccessful ? "Successful!" : ""
+                  }
+                />
+                <FormStatus
+                  type="error"
+                  message={form.formState.errors.root?.message}
+                />
+              </div>
+              <Button
+                disabled={form.formState.isSubmitting}
+                type="submit"
+                className=""
+              >
+                Submit
+              </Button>
+            </form>
+          </Form>
+        </CardWrapper>
       </>
     )
   );
