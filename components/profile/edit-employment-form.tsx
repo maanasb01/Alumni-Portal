@@ -43,6 +43,7 @@ import { v4 as uuid } from "uuid";
 import { updateEmploymentHistory } from "@/actions/edit/updateEmploymentHistory";
 import { useRouter } from "next/navigation";
 import { CardWrapper } from "../card-wrapper";
+import { ConfirmationDialog } from "../confirmation-dialog";
 
 export function EditEmploymentHistory({
   empHistory,
@@ -97,18 +98,19 @@ export function EditEmploymentHistory({
               {history.map((emp) => {
                 return (
                   <CardWrapper
-                  cardTitle={emp.company}
-                  cardDescription={emp.position}
-                  key={emp.id}
+                    cardTitle={emp.company}
+                    cardDescription={emp.position}
+                    key={emp.id}
                     footerJsx={
                       <div className="flex space-x-2">
-                        <Button
-                          onClick={() => deleteEmploymentEntry(emp)}
-                          variant="destructive"
-                          size="sm"
+                        <ConfirmationDialog
+                          actionFunction={() => deleteEmploymentEntry(emp)}
+                          message={`Are you sure you want to delete this entry: ${emp.company}, ${emp.position}?`}
                         >
-                          Delete
-                        </Button>
+                          <Button variant="destructive" size="sm">
+                            Delete
+                          </Button>
+                        </ConfirmationDialog>
                         <EmploymentHistoryFormDialog
                           history={history}
                           setHistory={setHistory}
@@ -311,7 +313,9 @@ export function EmploymentHistoryFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild aria-describedby="Edit/Update Employment Details">{children}</DialogTrigger>
+      <DialogTrigger asChild aria-describedby="Edit/Update Employment Details">
+        {children}
+      </DialogTrigger>
       <DialogContent aria-describedby="Edit/Update Employment Details">
         <DialogHeader>
           <DialogTitle className={"text-center"}>
@@ -454,8 +458,6 @@ export function EmploymentHistoryFormDialog({
             </div>
           </form>
         </Form>
-
-       
       </DialogContent>
     </Dialog>
   );

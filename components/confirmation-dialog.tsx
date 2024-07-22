@@ -39,10 +39,7 @@ export function ConfirmationDialog({
         <DialogFooter>
           <form
             className="flex justify-end"
-            action={async () => {
-              "use server";
-              await actionFunction();
-            }}
+            action={actionFunction}
           >
             <Button size={"sm"} variant={"destructive"}>
               Confirm

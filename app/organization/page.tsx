@@ -24,7 +24,10 @@ export default async function JoinOrg() {
 
           <div className="mt-6 flex justify-end">
             <ConfirmationDialog
-              actionFunction={leaveOrganization}
+              actionFunction={async ()=>{
+                "use server"
+                await leaveOrganization();
+              }}
               message={`Are you sure you want to leave the ${user.organization.name} Organization ?`}
             >
               <Button
