@@ -28,10 +28,11 @@ export default function RootLayout({
           </div>
           {/* Only show for small screens */}
           <div className="block md:hidden"><SideBar /></div>
-          <div className=" pb-32 px-2 pt-4 w-full h-screen overflow-y-auto bg-gray-200">{children}</div> {/* This div now has normal auto overflow */}
+          <div className=" pb-32  w-full h-screen overflow-y-auto bg-gray-200">{children}</div> {/* This div now has normal auto overflow */}
         </div>
       </body>
     </html>
   );
 }
 
+//px-2 pt-4

@@ -8,8 +8,8 @@ export default async function EmploymentHistoryEditPage(){
     if (!user) return <div>Unauthorized</div>;
 
     return(
-        <>
+        <div className="px-2 pt-4">
         <EditEmploymentHistory empHistory={user.EmploymentHistory} />
-        </>
+        </div>
     )
 }

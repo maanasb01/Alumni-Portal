@@ -9,8 +9,8 @@ export default async function BasicInfoEditPage(){
     if (!user) return <div>Unauthorized</div>;
 
     return(
-        <>
+        <div className="px-2 pt-4">
         <EditBasicInfoForm user={user} />
-        </>
+        </div>
     )
 }

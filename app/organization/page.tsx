@@ -11,7 +11,7 @@ export default async function JoinOrg() {
   if (!user) return <div>Unauthorized</div>;
 
   return (
-    <>
+    <div className="px-2 pt-4">
       {user.isRegistered && user.organization ? (
         <div className="p-6 bg-white shadow-md rounded-lg">
           <p className="text-4xl font-bold text-gray-800">
@@ -54,6 +54,6 @@ export default async function JoinOrg() {
       ) : (
         <JoinOrgForm />
       )}
-    </>
+    </div>
   );
 }
