@@ -123,6 +123,8 @@ model Organization {
   countryId Int
   stateId   Int
   cityId    Int
+  Posts     Post[]
+  Events    Event[]
 }
 
 // model Degree {
@@ -148,21 +150,29 @@ enum PostType {
 }
 
 model Post {
-  id          String   @id @default(cuid())
-  type        PostType
-  author      User     @relation(fields: [authorId], references: [id])
-  authorId    String
-  description String
+  id             String       @id @default(cuid())
+  type           PostType     @default(Regular)
+  author         User         @relation(fields: [authorId], references: [id])
+  authorId       String
+  description    String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 }
 
 model Event {
-  id          String   @id @default(cuid())
-  type        PostType
-  organizer   User     @relation(fields: [organizerId], references: [id])
-  organizerId String
-  description String
-  fee         Float    @default(0)
-  currency    String
+  id             String       @id @default(cuid())
+  type           PostType
+  organizer      User         @relation(fields: [organizerId], references: [id])
+  organizerId    String
+  description    String
+  fee            Float        @default(0)
+  currency       String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 }
 
 model FamilyMember {

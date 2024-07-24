@@ -1,26 +1,15 @@
-import { auth, signOut } from '@/auth'
-import { getUserById } from '@/data/user';
-import React from 'react'
-
+import { auth } from "@/auth";
+import { PostFeed } from "@/components/posts/posts-feed";
 
 export default async function Home() {
+  const session = await auth();
+  const user = session?.user;
 
-    const session = await auth();
+  if (!user) return <div>Unauthorized</div>;
 
   return (
     <div>
-      {JSON.stringify(session?.user)}
-      
-      <form action={async()=>{
-        "use server";
-        await signOut();
-      }}>
-
-        <button type='submit' className='text-red-500 border border-red-500 px-2 py-1'>
-          Logout
-        </button>
-      
-      </form>
-      </div>
-  )
+      <PostFeed user={user} />
+    </div>
+  );
 }

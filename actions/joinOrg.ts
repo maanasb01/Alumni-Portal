@@ -98,6 +98,7 @@ export async function leaveOrganization(){
     });
     revalidatePath('/organization');
   } catch (error) {
-    console.log(error)
+    console.log(error);
+    throw error;
   }
 }
