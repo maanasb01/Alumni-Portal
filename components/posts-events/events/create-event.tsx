@@ -7,8 +7,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../ui/dialog";
-import { PostSchema, PostType } from "@/schemas/postSchema";
+} from "../../ui/dialog";
+import { EventSchema } from "@/schemas/eventSchema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -25,35 +25,35 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import { FormStatus } from "../form-status";
-import { Button } from "../ui/button";
-import { Textarea } from "../ui/textarea";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { createPost, updatePost } from "@/actions/posts-events/createPost";
-import { Post } from "@prisma/client";
-import { FeedPostType } from "@/types/post";
+} from "../../ui/form";
+import { FormStatus } from "../../form-status";
+import { Button } from "../../ui/button";
+import { Textarea } from "../../ui/textarea";
+import { FeedEventType } from "@/types/event";
+import { Input } from "@/components/ui/input";
+import { CurrencySelectAsync } from "./currency-select";
+import { createEvent, updateEvent } from "@/actions/posts-events/createEvent";
 
 
-
-export function PostDialog({
-  post,
-  posts,
-  setPosts,
+export function EventDialog({
+  event,
+  events,
+  setEvents,
   children,
 }: {
-
-    post?: FeedPostType;
-    posts: FeedPostType[];
-    setPosts: Dispatch<SetStateAction<FeedPostType[]>>;
+  event?: FeedEventType;
+  events: FeedEventType[];
+  setEvents: Dispatch<SetStateAction<FeedEventType[]>>;
 
   children: ReactNode;
 }) {
-  const form = useForm<z.infer<typeof PostSchema>>({
-    resolver: zodResolver(PostSchema),
+  const form = useForm<z.infer<typeof EventSchema>>({
+    resolver: zodResolver(EventSchema),
     defaultValues: {
-      type: post ? post.type : "Regular",
-      description: post ? post.description : "",
+      title: event ? event.title : "",
+      description: event ? event.description : "",
+      currency: event ? {label:`${event.currency.name} - ${event.currency.currency} (${event.currency.currencySymbol})`,value:event.currency.id} : null as any,
+      fee: event ? parseFloat(event.fee.toString()) : 0
     },
   });
   const [open, setOpen] = useState(false);
@@ -64,8 +64,10 @@ export function PostDialog({
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset({
-        type: "Regular",
+        title: "",
         description: "",
+        currency: null as any,
+        fee: 0,
       });
       setOpen(false);
     }
@@ -73,43 +75,46 @@ export function PostDialog({
 
   useEffect(() => {
     // Reset the form with the correct values whenever the dialog opens for editing an existing entry
-    if (open && post) {
+    if (open && event) {
       form.reset({
-        type: post.type,
-        description: post.description,
+        title: event.title,
+        description: event.description,
+        currency: {label:`${event.currency.name} - ${event.currency.currency} (${event.currency.currencySymbol})`,value:event.currency.id},
+        fee: parseFloat(event.fee.toString()),
       });
     }
-  }, [open, post]);
+  }, [open, event]);
 
-  async function onSubmit(values: z.infer<typeof PostSchema>) {
+ 
+  async function onSubmit(values: z.infer<typeof EventSchema>) {
     console.log(values);
 
     try {
-      if (!post) {
-        const data = await createPost(values);
+      if (!event) {
+        const data = await createEvent(values);
         if (data.error) {
           form.setError("root", { message: data.error });
           return;
         }
 
-        const newPost = data?.post as FeedPostType;
-        if(newPost){
-            setPosts(prevPosts=> [newPost,...prevPosts]);
+        const newEvent = data?.event as FeedEventType;
+        if (newEvent) {
+          setEvents((prevEvents) => [newEvent, ...prevEvents]);
         }
       } else {
-        const data = await updatePost(values, post.id);
+        const data = await updateEvent(values, event.id);
         if (data.error) {
           form.setError("root", { message: data.error });
           return;
         }
-        const updatedPost = data?.post;
-        const updatedPosts = posts.map((p) => {
-          if (p.id === updatedPost?.id) {
-            return updatedPost;
+        const updatedEvent = data?.event;
+        const updatedEvents = events.map((p) => {
+          if (p.id === updatedEvent?.id) {
+            return updatedEvent;
           }
           return p;
         });
-        setPosts(updatedPosts  as FeedPostType[]);
+        setEvents(updatedEvents as FeedEventType[]);
       }
       setOpen(false);
     } catch (error) {
@@ -119,8 +124,10 @@ export function PostDialog({
 
   function onCancel() {
     form.reset({
-      type: "Regular",
+      title: "",
       description: "",
+      currency: null as any,
+      fee: 0,
     });
 
     setOpen(false);
@@ -133,19 +140,36 @@ export function PostDialog({
       </DialogTrigger>
       <DialogContent aria-describedby="Edit/Update Employment Details">
         <DialogHeader>
-          <DialogTitle className={"text-center"}>Add/Update Post</DialogTitle>
+          <DialogTitle className={"text-center"}>Add/Update Event</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="">
             <div className=" flex flex-col space-y-2 text-left mb-3">
+
+
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel> Event Title </FormLabel>
+                    <FormControl>
+                      <Input placeholder="Event Title" {...field} />
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel> Post Type </FormLabel>
+                    <FormLabel> Event Description </FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Post Content" {...field} />
+                      <Textarea placeholder="Event Description" {...field} />
                     </FormControl>
 
                     <FormMessage />
@@ -153,50 +177,29 @@ export function PostDialog({
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="type"
-                render={({ field }) => (
-                  <FormItem className="space-y-3">
-                    <FormLabel>Post Type</FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        className="flex flex-col space-y-1"
-                      >
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value={PostType.Values.Regular} />
-                          </FormControl>
-                          <FormLabel className="font-normal">Regular</FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem
-                              value={PostType.Values.Announcement}
-                            />
-                          </FormControl>
-                          <FormLabel className="font-normal">
-                            Announcement
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem
-                              value={PostType.Values.FinancialEmergency}
-                            />
-                          </FormControl>
-                          <FormLabel className="font-normal">
-                            Financial Emergency
-                          </FormLabel>
-                        </FormItem>
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="flex justify-between">
+                <CurrencySelectAsync
+                  form={form}
+                  name="currency"
+                />
+  
+                <FormField
+                  control={form.control}
+                  name="fee"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel> Event Fees </FormLabel>
+                      <FormControl>
+                        <Input placeholder="Event Fees" {...field} type="number" className="w-28" />
+                      </FormControl>
+  
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              
 
               {form.formState.isSubmitSuccessful && (
                 <FormStatus

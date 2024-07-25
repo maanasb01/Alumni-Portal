@@ -8,15 +8,7 @@ import { z } from "zod";
 //     description String
 //   }
   
-//   model Event {
-//     id          String   @id @default(cuid())
-//     type        PostType
-//     organizer   User     @relation(fields: [organizerId], references: [id])
-//     organizerId String
-//     description String
-//     fee         Float    @default(0)
-//     currency    String
-//   }
+
 
 export const PostType = z.enum(["Regular" , "FinancialEmergency" , "Announcement"],{required_error:"Required"});
 export const PostSchema = z.object({

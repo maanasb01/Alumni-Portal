@@ -2,52 +2,53 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SessionUser } from "@/types/user";
-import { deletePost, getOrganizationPosts } from "@/data/post";
-import { PostDialog } from "./create-post";
-import { RotatingLines } from "react-loader-spinner";
-import { FeedPostType } from "@/types/post";
-import { Post } from "./post";
+import { deleteEvent, getOrganizationEvents } from "@/data/event";
+import { EventDialog } from "./create-event";
+import { RotatingLines } from "react-loader-spinner"; 
+import { FeedEventType } from "@/types/event";
+import { Event } from "./event";
 
 
-export function PostFeed({ user }: { user: SessionUser }) {
-  const [posts, setPosts] = useState<FeedPostType[]>([]);
+
+export function EventFeed({ user }: { user: SessionUser }) {
+  const [events, setEvents] = useState<FeedEventType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showMore, setShowMore] = useState(false);
   const [page, setPage] = useState(0);
 
   useEffect(() => {
-    async function fetchPosts() {
+    async function fetchEvents() {
       try {
         setLoading(true);
-        const data = await getOrganizationPosts(user,page);
+        const data = await getOrganizationEvents(user,page);
 
         if(data && data.error){
           setError(data.error)
           return
         }
-        const fetchedPosts = data.posts;
-        //setPosts(prevPosts=>[...prevPosts,...fetchedPosts as any]);
-        setPosts((prevPosts) => {
-          const newPosts = [...prevPosts, ...fetchedPosts as any];
-          // Remove duplicate posts by checking the ID
-          return Array.from(new Set(newPosts.map(post => post.id))).map(id => newPosts.find(post => post.id === id));
+        const fetchedEvents = data.events;
+        //setEvents(prevEvents=>[...prevEvents,...fetchedEvents as any]);
+        setEvents((prevEvents) => {
+          const newEvents = [...prevEvents, ...fetchedEvents as any];
+          // Remove duplicate events by checking the ID
+          return Array.from(new Set(newEvents.map(event => event.id))).map(id => newEvents.find(event => event.id === id));
         });
 
 
-        if(fetchedPosts && fetchedPosts.length<3){
+        if(fetchedEvents && fetchedEvents.length<20){
           setShowMore(false);
         }else{
           setShowMore(true)
         }
       } catch (err) {
-        setError("Failed to load posts.");
+        setError("Failed to load events.");
       } finally {
         setLoading(false);
       }
     }
 
-    fetchPosts();
+    fetchEvents();
   }, [page]);
 
 
@@ -71,51 +72,51 @@ export function PostFeed({ user }: { user: SessionUser }) {
 
   const handleDelete = async (postId: string) => {
     try {
-      await deletePost(postId);
-      setPosts(posts.filter((post) => post.id !== postId));
+      await deleteEvent(postId);
+      setEvents(events.filter((event) => event.id !== postId));
       return true;
     } catch (err) {
-      console.error("Failed to delete post:", err);
+      console.error("Failed to delete event:", err);
       throw err;
     }
   };
 
   return (
     <div className="">
-      <PostDialog posts={posts} setPosts={setPosts}>
+      <EventDialog events={events} setEvents={setEvents}>
         <div className="mt-1 py-3 text-center cursor-pointer bg-slate-400 hover:bg-slate-500 transition-colors rounded-lg text-white font-semibold">
-          Create a New Post{" "}
+          Create a New Event{" "}
         </div>
-      </PostDialog>
+      </EventDialog>
 
         <div className="max-w-2xl mx-auto mt-8 space-y-6 flex flex-col">
-          {posts && posts.length !== 0 ? (
-            posts.map((post,index) =>{ 
-              if(posts.length === index+1){
+          {events && events.length !== 0 ? (
+            events.map((event,index) =>{ 
+              if(events.length === index+1){
 
-                return <Post
+                return <Event
                 ref={lastPostRef}
-                key={post.id}
-                post={post}
+                key={event.id}
+                event={event}
                 user={user}
-                posts={posts}
-                setPosts={setPosts}
+                events={events}
+                setEvents={setEvents}
                 handleDelete={handleDelete}
               />
               }
 
-              return <Post
-                key={post.id}
-                post={post}
+              return <Event
+                key={event.id}
+                event={event}
                 user={user}
-                posts={posts}
-                setPosts={setPosts}
+                events={events}
+                setEvents={setEvents}
                 handleDelete={handleDelete}
               />
             })
           ) : (
             !loading && <p className="text-center text-sm text-gray-400">
-              No Posts to Display
+              No Events to Display
             </p>
           )}
 
@@ -125,7 +126,7 @@ export function PostFeed({ user }: { user: SessionUser }) {
               <RotatingLines strokeColor="gray" visible={true} />
             </div>
           )}
-          {posts && posts.length !== 0 && !showMore && (
+          {events && events.length !== 0 && !showMore && (
             <p className="text-sm text-gray-500 text-center">No More Entries</p>
           )}
         </div>

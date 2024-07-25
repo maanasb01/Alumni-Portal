@@ -1,4 +1,4 @@
-import { PostEventsNav } from "@/components/posts/postevents-nav";
+import { PostEventsNav } from "@/components/posts-events/postevents-nav";
 
 export default function HomeFeedLayout({
   children,

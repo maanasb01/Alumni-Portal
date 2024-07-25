@@ -1,27 +1,17 @@
+"use client";
+
 import { FiEdit, FiTrash2 } from "react-icons/fi";
-import { Badge } from "../ui/badge";
+import { Badge } from "../../ui/badge";
 
 import Image from "next/image";
 import { PostDialog } from "./create-post";
 
 import { FeedPostType } from "@/types/post";
 import { SessionUser } from "@/types/user";
-import {
-  Dispatch,
-  forwardRef,
-  LegacyRef,
-  RefAttributes,
-  SetStateAction,
-} from "react";
-import { ConfirmationDialog } from "../confirmation-dialog";
-
-const formatDate = (dateString: Date) => {
-  const date = new Date(dateString);
-  return `${date.toLocaleDateString()} ${date.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  })}`;
-};
+import { Dispatch, forwardRef, LegacyRef, SetStateAction } from "react";
+import { ConfirmationDialog } from "../../confirmation-dialog";
+import Link from "next/link";
+import { formatDate } from "@/lib/post-event";
 
 export const Post = forwardRef(
   (
@@ -60,7 +50,9 @@ export const Post = forwardRef(
               </div>
             )}
             <div>
-              <h2 className="text-lg font-semibold">{post.author.name}</h2>
+              <Link href={`/profile/${post.authorId}`}>
+                <h2 className="text-lg font-semibold">{post.author.name}</h2>
+              </Link>
               <p className="text-sm text-gray-500">{post.organization.name}</p>
             </div>
           </div>
@@ -72,13 +64,13 @@ export const Post = forwardRef(
                 </button>
               </PostDialog>
 
-              <ConfirmationDialog actionFunction={() => handleDelete(post.id)} message="Are you sure you want to delete the post?">
-                  <button
-                    className="text-gray-500 hover:text-gray-700"
-                    
-                  >
-                    <FiTrash2 size={20} />
-                  </button>
+              <ConfirmationDialog
+                actionFunction={() => handleDelete(post.id)}
+                message="Are you sure you want to delete the post?"
+              >
+                <button className="text-gray-500 hover:text-gray-700">
+                  <FiTrash2 size={20} />
+                </button>
               </ConfirmationDialog>
             </div>
           )}

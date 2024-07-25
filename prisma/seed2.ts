@@ -38,7 +38,7 @@ const cities: City[] = citiesRawData as City[];
 //   const countryData: Prisma.CountryUncheckedCreateInput[] = [];
 //   const currencyData: Prisma.CurrencyUncheckedCreateInput[] = [];
 const countryData: any = [];
-const currencyData: any = [];
+const currencySet=new Set();
 
 for (let country of countries) {
   countryData.push({
@@ -46,13 +46,29 @@ for (let country of countries) {
     name: country.name,
   });
 
-  currencyData.push({
+  // Check if currency is not already in the Set before adding
+  const currencyEntry = {
     name: country.currency_name,
     currency: country.currency,
     currencySymbol: country.currency_symbol,
     countryId: country.id,
-  });
+  };
+
+    // Assuming you want to use a combination of name and symbol as a unique identifier for currency
+    const currencyIdentifier = `${country.currency_name}-${country.currency_symbol}`;
+    if (!currencySet.has(currencyIdentifier)) {
+      currencySet.add(currencyEntry);
+    }
+  
+
+  // currencyData.push({
+  //   name: country.currency_name,
+  //   currency: country.currency,
+  //   currencySymbol: country.currency_symbol,
+  //   countryId: country.id,
+  // });
 }
+const currencyData:any = Array.from(currencySet);
 
 const statesData = states.map((state: any) => ({
   id: state.id,

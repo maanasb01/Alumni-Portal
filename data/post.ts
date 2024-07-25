@@ -20,8 +20,8 @@ export async function getOrganizationPosts(user: SessionUser,page:number) {
       },
       orderBy:{createdAt:'desc'},
 
-      take:3,
-      skip:3*page
+      take:20,
+      skip:20*page
       
     });
 
@@ -31,7 +31,7 @@ export async function getOrganizationPosts(user: SessionUser,page:number) {
     throw error;
   }
 }
-export async function getUserPosts(user: SessionUser) {
+export async function getUserPosts(user: SessionUser, page:number) {
   try {
     if (!user.organizationId) {
       return { error: "Organization not found" };
@@ -46,7 +46,9 @@ export async function getUserPosts(user: SessionUser) {
         author:{select:{name:true,image:true}},
         organization:{select:{name:true}}
       },
-      orderBy:{createdAt:'desc'}
+      orderBy:{createdAt:'desc'},
+      take:20,
+      skip:20*page
       
     });
 
