@@ -65,7 +65,7 @@ export function EditEmploymentHistory({
       return emp;
     });
     setHistory(formattedHistory);
-  }, []);
+  }, [empHistory]);
 
   function deleteEmploymentEntry(emp: EmploymentHistory) {
     const newList = history.filter((h) => h.id !== emp.id);
@@ -223,7 +223,7 @@ export function EmploymentHistoryFormDialog({
     if (currentlyWorkHere) {
       form.setValue("endDate", undefined);
     }
-  }, [currentlyWorkHere]);
+  }, [currentlyWorkHere,form]);
 
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -247,7 +247,7 @@ export function EmploymentHistoryFormDialog({
         endDate: emp.endDate || undefined, // Handle cases where endDate might be null
       });
     }
-  }, [open, emp]);
+  }, [open, emp,form]);
 
   const isSameDate = (date1: Date, date2: Date) =>
     date1.getFullYear() === date2.getFullYear() &&

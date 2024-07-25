@@ -71,13 +71,13 @@ export function JoinOrgForm() {
       form.setValue("state", null as any); // TS Error. Expecting an object because of zod schema
       form.setValue("city", null as any);
     }
-  }, [countryVal]);
+  }, [countryVal,form]);
 
   useEffect(() => {
     if (stateVal) {
       form.setValue("city", null as any);
     }
-  }, [stateVal]);
+  }, [stateVal,form]);
 
   async function onSubmit(
     values: z.infer<typeof BaseJoinOrgSchema | typeof ExtendedJoinOrgSchema>

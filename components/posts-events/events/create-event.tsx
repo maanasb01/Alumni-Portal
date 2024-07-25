@@ -83,7 +83,7 @@ export function EventDialog({
         fee: parseFloat(event.fee.toString()),
       });
     }
-  }, [open, event]);
+  }, [open, event,form]);
 
  
   async function onSubmit(values: z.infer<typeof EventSchema>) {

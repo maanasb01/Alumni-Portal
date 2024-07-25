@@ -78,7 +78,7 @@ export function PostDialog({
         description: post.description,
       });
     }
-  }, [open, post]);
+  }, [open, post,form]);
 
   async function onSubmit(values: z.infer<typeof PostSchema>) {
     console.log(values);

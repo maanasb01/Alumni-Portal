@@ -58,7 +58,7 @@ export function EditFamilyMembers({
 
   useEffect(() => {
     setMembers(familyMembers);
-  }, []);
+  }, [familyMembers]);
 
   function deleteMemberEntry(member: FamilyMember) {
     const newList = members.filter((m) => m.id !== member.id);
@@ -219,7 +219,7 @@ export function FamilyMembersFormDialog({
         description: member.description || "",
       });
     }
-  }, [open, member]);
+  }, [open, member,form]);
 
   async function onSubmit(values: z.infer<typeof FamilyMemberSchema>) {
     console.log(values);

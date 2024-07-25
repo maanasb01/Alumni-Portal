@@ -62,3 +62,5 @@ export const ConfirmationDialog = forwardRef((
     </Dialog>
   );
 });
+
+ConfirmationDialog.displayName="ConfirmationDialog";

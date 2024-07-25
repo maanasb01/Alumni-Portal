@@ -55,7 +55,7 @@ export function EventFeed({ user,showCreateOption,showOnlyUsers }: { user: Sessi
     }
 
     fetchEvents();
-  }, [page]);
+  }, [page, showOnlyUsers, user]);
 
 
 

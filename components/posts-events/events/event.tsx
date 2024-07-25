@@ -73,3 +73,5 @@ export const Event = forwardRef(
     );
   }
 );
+
+Event.displayName="Event"

@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="flex  flex-col items-center justify-between p-24 bg-gradient-to-r from-orange-50 to-slate-100">
+    <main className="flex  flex-col items-center justify-between p-24 bg-gradient-to-r from-orange-50 to-slate-100 h-full">
       
 
       <div className={`${poppins.className} text-5xl relative  flex justify-center text-center`}>

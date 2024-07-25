@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import debounce from "lodash.debounce";
 import { Input } from "./ui/input";
 import { searchUsers } from "@/data/user";
@@ -19,46 +19,7 @@ export default function Search() {
   const pathname = usePathname();
   const router = useRouter();
 
-  // At initial render check if the url has any search query and if it is present, search it.
-  useEffect(() => {
-    const params = new URLSearchParams(searchParams);
-    if (params.has("query")) {
-      const q = params.get("query");
-      if (q) {
-        handleSearch(q);
-      }
-    }
-  }, []);
-
-  // To fetch more results for the searched query
-  async function showMoreResults() {
-    try {
-      setLoading(true);
-      setError(null);
-      const params = new URLSearchParams(searchParams);
-      if (params.has("query")) {
-        const q = params.get("query");
-        if (q) {
-          const moreEntries = await searchUsers(q, page + 1);
-          setPage(page + 1);
-          if (moreEntries.length === 0 || moreEntries.length < 10) {
-            setShowMore(false);
-          } else {
-            setResults((prevRes) => [...prevRes, ...moreEntries]);
-          }
-        }
-      }
-    } catch (err) {
-      console.error(err);
-      setError(
-        "An error occurred while loading more results. Please try again."
-      );
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function handleSearch(term: string) {
+  const handleSearch = useCallback(async (term: string) => {
     try {
       setPage(0);
       setShowMore(true);
@@ -92,7 +53,84 @@ export default function Search() {
     } finally {
       setLoading(false);
     }
+  }, [searchParams, router, pathname]);
+
+  // At initial render check if the url has any search query and if it is present, search it.
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+    if (params.has("query")) {
+      const q = params.get("query");
+      if (q) {
+        handleSearch(q);
+      }
+    }
+  }, [handleSearch,searchParams]);
+
+  // To fetch more results for the searched query
+  async function showMoreResults() {
+    try {
+      setLoading(true);
+      setError(null);
+      const params = new URLSearchParams(searchParams);
+      if (params.has("query")) {
+        const q = params.get("query");
+        if (q) {
+          const moreEntries = await searchUsers(q, page + 1);
+          setPage(page + 1);
+          if (moreEntries.length === 0 || moreEntries.length < 10) {
+            setShowMore(false);
+          } else {
+            setResults((prevRes) => [...prevRes, ...moreEntries]);
+          }
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      setError(
+        "An error occurred while loading more results. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
   }
+
+  // async function handleSearch(term: string) {
+  //   try {
+  //     setPage(0);
+  //     setShowMore(true);
+  //     setLoading(true);
+  //     setError(null);
+  //     const params = new URLSearchParams(searchParams);
+  //     if (term.length > 0 && term.length < 3) {
+  //       // A quick fix to notify user
+  //       setResults([
+  //         {
+  //           organization: {
+  //             name: "Please write at least 3 characters to search.",
+  //           },
+  //         },
+  //       ]);
+  //     } else if (term.length >= 3) {
+  //       params.set("query", term);
+  //       router.replace(`${pathname}?${params.toString()}`);
+  //       const results = await searchUsers(term, 0);
+  //       setResults(results);
+  //       if (results.length < 10) setShowMore(false);
+  //       setHighlightedIndex(null);
+  //     } else {
+  //       params.delete("query");
+  //       router.replace(`${pathname}?${params.toString()}`);
+  //       setResults([]);
+  //     }
+  //   } catch (err) {
+  //     console.error(err);
+  //     setError("An error occurred while searching. Please try again.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }
+
+
 
   // Debounce function to optimize searching
   const debouncedHandleSearch = debounce(handleSearch, 300);

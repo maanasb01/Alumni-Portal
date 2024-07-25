@@ -101,3 +101,5 @@ export const Post = forwardRef(
     );
   }
 );
+
+Post.displayName="Post"

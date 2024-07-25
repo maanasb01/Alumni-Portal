@@ -55,7 +55,7 @@ export function PostFeed({ user,showCreateOption,showOnlyUsers }: { user: Sessio
     }
 
     fetchPosts();
-  }, [page]);
+  }, [page,showOnlyUsers,user]);
 
 
 

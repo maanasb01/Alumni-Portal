@@ -90,7 +90,7 @@ export function GenericSelect({
       }
     };
     getDefaultOptions();
-  }, [countryId, stateId]);
+  }, [countryId, stateId,customDefaultOptions]);
 
   const loadOptions = useCallback(
     debounce((inputValue: string, callback: (options: any) => void) => {
@@ -99,16 +99,7 @@ export function GenericSelect({
     [countryId, stateId] // VVIMP
   ) as any; // To Resolve TS ERROR in loadOptions
 
-  //   function customDebounce(fn, delay = 500) {
-  //     let timeout;
 
-  //     return (...args) => {
-  //         clearTimeout(timeout);
-  //         timeout = setTimeout(() => {
-  //             fn(...args);
-  //         }, delay);
-  //     };
-  // }
 
   return (
     <>
