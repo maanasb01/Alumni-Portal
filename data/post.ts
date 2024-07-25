@@ -33,14 +33,11 @@ export async function getOrganizationPosts(user: SessionUser,page:number) {
 }
 export async function getUserPosts(user: SessionUser, page:number) {
   try {
-    if (!user.organizationId) {
-      return { error: "Organization not found" };
-    }
+    
 
     const posts = await db.post.findMany({
       where: {
         authorId: user.id,
-        organizationId: user.organizationId,
       },
       include:{
         author:{select:{name:true,image:true}},
@@ -52,7 +49,7 @@ export async function getUserPosts(user: SessionUser, page:number) {
       
     });
 
-    return posts;
+    return {posts};
   } catch (error) {
     console.log(error);
     throw error;

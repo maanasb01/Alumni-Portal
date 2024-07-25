@@ -11,7 +11,7 @@ export default async function EventsPage(){
   
     return (
       user.organization ?<div>
-        <EventFeed user={user} />
+        <EventFeed user={user} showCreateOption={true} />
       </div>
       :
       <div className="flex flex-col mt-10 space-y-3 items-center">

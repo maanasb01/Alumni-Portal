@@ -2,14 +2,14 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SessionUser } from "@/types/user";
-import { deletePost, getOrganizationPosts } from "@/data/post";
+import { deletePost, getOrganizationPosts, getUserPosts } from "@/data/post";
 import { PostDialog } from "./create-post";
 import { RotatingLines } from "react-loader-spinner";
 import { FeedPostType } from "@/types/post";
 import { Post } from "./post";
 
 
-export function PostFeed({ user }: { user: SessionUser }) {
+export function PostFeed({ user,showCreateOption,showOnlyUsers }: { user: SessionUser,showCreateOption:boolean,showOnlyUsers?:boolean }) {
   const [posts, setPosts] = useState<FeedPostType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -20,12 +20,19 @@ export function PostFeed({ user }: { user: SessionUser }) {
     async function fetchPosts() {
       try {
         setLoading(true);
-        const data = await getOrganizationPosts(user,page);
-
-        if(data && data.error){
-          setError(data.error)
-          return
+        // const data = await getOrganizationPosts(user,page);
+        let data;
+        if(showOnlyUsers){
+          data = await getUserPosts(user,page)
+        }else{
+          data = await getOrganizationPosts(user,page);
+          if(data && data.error){
+            setError(data.error)
+            return
+          }
         }
+
+        
         const fetchedPosts = data.posts;
         //setPosts(prevPosts=>[...prevPosts,...fetchedPosts as any]);
         setPosts((prevPosts) => {
@@ -82,11 +89,11 @@ export function PostFeed({ user }: { user: SessionUser }) {
 
   return (
     <div className="">
-      <PostDialog posts={posts} setPosts={setPosts}>
+      {showCreateOption && <PostDialog posts={posts} setPosts={setPosts}>
         <div className="mt-1 py-3 text-center cursor-pointer bg-slate-400 hover:bg-slate-500 transition-colors rounded-lg text-white font-semibold">
           Create a New Post{" "}
         </div>
-      </PostDialog>
+      </PostDialog>}
 
         <div className="max-w-2xl mx-auto mt-8 space-y-6 flex flex-col">
           {posts && posts.length !== 0 ? (

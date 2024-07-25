@@ -32,14 +32,14 @@ export async function getOrganizationEvents(user: SessionUser, page: number) {
 }
 export async function getUserEvents(user: SessionUser, page: number) {
   try {
-    if (!user.organizationId) {
-      return { error: "Organization not found" };
-    }
+    // if (!user.organizationId) {
+    //   return { error: "Organization not found" };
+    // }
 
-    const posts = await db.event.findMany({
+    const events = await db.event.findMany({
       where: {
         organizerId: user.id,
-        organizationId: user.organizationId,
+       
       },
       include: {
         organizer: { select: { name: true, image: true } },
@@ -51,7 +51,7 @@ export async function getUserEvents(user: SessionUser, page: number) {
       skip: 20 * page,
     });
 
-    return posts;
+    return {events};
   } catch (error) {
     console.log(error);
     throw error;

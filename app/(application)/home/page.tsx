@@ -11,7 +11,7 @@ export default async function Home() {
 
   return (
     user.organization ?<div>
-      <PostFeed user={user} />
+      <PostFeed user={user} showCreateOption={true} />
     </div>
     :
     <div className="flex flex-col mt-10 space-y-3 items-center">

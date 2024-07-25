@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SessionUser } from "@/types/user";
-import { deleteEvent, getOrganizationEvents } from "@/data/event";
+import { deleteEvent, getOrganizationEvents, getUserEvents } from "@/data/event";
 import { EventDialog } from "./create-event";
 import { RotatingLines } from "react-loader-spinner"; 
 import { FeedEventType } from "@/types/event";
@@ -10,7 +10,7 @@ import { Event } from "./event";
 
 
 
-export function EventFeed({ user }: { user: SessionUser }) {
+export function EventFeed({ user,showCreateOption,showOnlyUsers }: { user: SessionUser,showCreateOption:boolean,showOnlyUsers?:boolean }) {
   const [events, setEvents] = useState<FeedEventType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -21,12 +21,18 @@ export function EventFeed({ user }: { user: SessionUser }) {
     async function fetchEvents() {
       try {
         setLoading(true);
-        const data = await getOrganizationEvents(user,page);
-
-        if(data && data.error){
-          setError(data.error)
-          return
+        //const data = await getOrganizationEvents(user,page);
+        let data;
+        if(showOnlyUsers){
+          data = await getUserEvents(user,page);
+        }else{
+          data = await getOrganizationEvents(user,page);
+          if(data && data.error){
+            setError(data.error)
+            return
+          }
         }
+        
         const fetchedEvents = data.events;
         //setEvents(prevEvents=>[...prevEvents,...fetchedEvents as any]);
         setEvents((prevEvents) => {
@@ -83,11 +89,11 @@ export function EventFeed({ user }: { user: SessionUser }) {
 
   return (
     <div className="">
-      <EventDialog events={events} setEvents={setEvents}>
+      {showCreateOption && <EventDialog events={events} setEvents={setEvents}>
         <div className="mt-1 py-3 text-center cursor-pointer bg-slate-400 hover:bg-slate-500 transition-colors rounded-lg text-white font-semibold">
           Create a New Event{" "}
         </div>
-      </EventDialog>
+      </EventDialog>}
 
         <div className="max-w-2xl mx-auto mt-8 space-y-6 flex flex-col">
           {events && events.length !== 0 ? (
