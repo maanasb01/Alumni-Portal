@@ -98,7 +98,6 @@ export default function Search() {
   const debouncedHandleSearch = debounce(handleSearch, 300);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    console.log('Key down event detected:', e.key);
     if (e.key === "ArrowDown") {
       setHighlightedIndex((prevIndex) =>
         prevIndex === null || prevIndex === results.length - 1
@@ -144,8 +143,8 @@ export default function Search() {
               <div
                 onClick={() => redirectToUser(user)}
                 key={user.id}
-                className={`p-4 border bg-white cursor-pointer border-gray-200 rounded-md shadow-sm transition-colors hover:bg-blue-200 ${
-                  highlightedIndex === index ? "bg-slate-300" : ""
+                className={`p-4 border cursor-pointer border-gray-200 rounded-md shadow-sm transition-colors hover:bg-blue-200 ${
+                  highlightedIndex === index ? "bg-slate-300" : "bg-white"
                 }`}
               >
                 <div className="text-lg font-semibold">{user.name}</div>

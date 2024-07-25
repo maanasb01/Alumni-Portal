@@ -1,6 +1,8 @@
 "use server";
 
+import { signOut } from "@/auth";
 import { db } from "@/lib/db";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 const userSelectProperties = {
   id: true,
@@ -97,5 +99,22 @@ export async function searchUsers(query: string, page: number) {
   } catch (error) {
     console.error("Failed to search users:", error);
     throw error;
+  }
+}
+
+export async function deleteUser(userId:string) {
+  try {
+    await db.user.delete({
+      where: {
+        id: userId,
+      },
+    });
+    console.log(`User with ID ${userId} has been deleted.`);
+   
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    throw error;
+  } finally {
+    await db.$disconnect();
   }
 }

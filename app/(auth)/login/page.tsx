@@ -3,7 +3,7 @@ import LoginForm from "@/components/auth/login-form";
 export default function LoginPage(){
 
     return(
-        <div>
+        <div className="h-screen">
             <LoginForm />
         </div>
     )

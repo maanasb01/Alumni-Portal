@@ -1,6 +1,7 @@
 import { auth, signOut } from "@/auth";
 import Link from "next/link";
 import { Button } from "./ui/button";
+import { DEFAULT_LOGOUT_REDIRECT } from "@/routes";
 
 export async function AppBar() {
   const session = await auth();
@@ -20,7 +21,7 @@ export async function AppBar() {
               className="ml-auto mt-0"
               action={async () => {
                 "use server";
-                await signOut();
+                await signOut({redirectTo:DEFAULT_LOGOUT_REDIRECT });
               }}
             >
               <Button size={"sm"} variant={"destructive"}>

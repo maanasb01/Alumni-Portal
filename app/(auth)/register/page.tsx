@@ -3,7 +3,7 @@ import RegisterForm from "@/components/auth/register-form";
 export default function SignupPage(){
 
     return(
-        <div>
+        <div className="h-screen">
             <RegisterForm />   
         </div>
     )

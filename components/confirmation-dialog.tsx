@@ -1,4 +1,5 @@
 "use client"
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,22 +11,20 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ReactElement, useState } from "react";
+import { ReactElement, useState, forwardRef, LegacyRef } from "react";
 
-/**
- * A confirmation Dialog to warn user for a certain action. Takes message, action function (usually a server action) to run if user wants to continue,
- * Wrap this component around a UI, which is required to get clicked to open this dialog
- */
-
-export function ConfirmationDialog({
-  message,
-  actionFunction,
-  children,
-}: {
-  message: string;
-  actionFunction: () => Promise<any> | any;
-  children: ReactElement;
-}) {
+export const ConfirmationDialog = forwardRef((
+  {
+    message,
+    actionFunction,
+    children,
+  }: {
+    message: string;
+    actionFunction: () => Promise<any> | any;
+    children: ReactElement;
+  },
+  ref:LegacyRef<HTMLDivElement> | undefined
+) => {
   const [error, setError] = useState<string | null>(null);
 
   const handleAction = async (event: React.FormEvent) => {
@@ -39,9 +38,9 @@ export function ConfirmationDialog({
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+    <Dialog >
+      <DialogTrigger  asChild>{children}</DialogTrigger>
+      <DialogContent ref={ref} className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Confirm Action</DialogTitle>
           <DialogDescription>{message}</DialogDescription>
@@ -54,7 +53,7 @@ export function ConfirmationDialog({
             </Button>
           </form>
           <DialogClose asChild>
-            <Button type="button" size={"sm"} variant={"outline"} onClick={()=>setError(null)}>
+            <Button type="button" size={"sm"} variant={"outline"} onClick={() => setError(null)}>
               Cancel
             </Button>
           </DialogClose>
@@ -62,4 +61,4 @@ export function ConfirmationDialog({
       </DialogContent>
     </Dialog>
   );
-}
+});
