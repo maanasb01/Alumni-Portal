@@ -75,7 +75,7 @@ export const SideBar = () => {
         ref={sidebarRef}
         className={clsx(
           isOpen && !isLargeScreen ? "translate-x-0" : "-translate-x-full",
-          "transition-transform duration-300 transform fixed top-0 start-0 bottom-0 z-50 w-64 bg-gray-100  border-r-2 border-gray-300 pt-7 pb-10 overflow-y-auto lg:static lg:translate-x-0  lg:pt-0 lg:pb-0 lg:overflow-y-auto lg:w-full lg:h-full lg:block "
+          "transition-transform duration-300 transform fixed top-0 start-0 bottom-0 z-50 w-64 bg-gray-100  border-r-2 border-gray-300 pt-7 pb-10 overflow-y-auto lg:static lg:translate-x-0  lg:pt-0 lg:pb-0 lg:overflow-y-auto lg:w-full lg:h-full lg:block bg-gradient-to-r from-neutral-100 to-slate-200"
         )}
       >
         {!isLargeScreen && (

@@ -127,7 +127,7 @@ export default function Search() {
       onKeyDown={handleKeyDown}
       tabIndex={0}
     >
-      <div className="sticky top-0 z-10 bg-gray-200 w-full pt-1 pb-5">
+      <div className="sticky top-0 z-10 bg-gradient-to-r from-slate-100 to-slate-300 w-full pt-1 pb-5">
         <Input
           className="p-2 h-16 border border-gray-600 rounded-md shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 text-lg"
           placeholder="Search Users by Name, Organization or Email"
