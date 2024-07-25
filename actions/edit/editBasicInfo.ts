@@ -41,7 +41,7 @@ export async function editBasicInfo(values: z.infer<typeof BasicInfoSchema>) {
       },
     });
 
-    redirect("/profile");
+    redirect(`/profile/${user.id}`);
 
 
   } catch (error) {

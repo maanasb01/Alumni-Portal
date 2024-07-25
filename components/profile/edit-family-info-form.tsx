@@ -45,8 +45,10 @@ import { ConfirmationDialog } from "../confirmation-dialog";
 
 export function EditFamilyMembers({
   familyMembers,
+  userId
 }: {
   familyMembers: FamilyMember[];
+  userId:string
 }) {
   const [members, setMembers] = useState<FamilyMember[]>(familyMembers);
   const [error, setError] = useState("");
@@ -75,7 +77,7 @@ export function EditFamilyMembers({
       }
       if (data && data.success) {
         setSuccess("Employment Members Updated Successfully!");
-        router.push("/profile");
+        router.push(`/profile/${userId}`);
         router.refresh();
       }
     } catch (error) {

@@ -2,6 +2,7 @@ import { type NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { LoginSchema } from "./schemas/authSchema";
 import { getUserByEmailForAuth } from "./data/user";
+import Google from "next-auth/providers/google"
 import bcrypt from "bcryptjs";
 
 export default {
@@ -27,6 +28,15 @@ export default {
         } catch (error) {
           throw error;
         }
+      },
+    }),
+    Google({
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
       },
     }),
   ],

@@ -9,7 +9,7 @@ export default async function EmploymentHistoryEditPage(){
 
     return(
         <div className="px-2 pt-4">
-        <EditEmploymentHistory empHistory={user.EmploymentHistory} />
+        <EditEmploymentHistory empHistory={user.EmploymentHistory} userId={user.id} />
         </div>
     )
 }

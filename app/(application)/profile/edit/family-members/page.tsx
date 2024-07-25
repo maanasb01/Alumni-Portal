@@ -6,5 +6,5 @@ export default async function FamilyMembersEditPage() {
 
   if (!user) return <div>Unauthorized</div>;
 
-  return <div className="px-2 pt-4"><EditFamilyMembers familyMembers={user.FamilyMembers||[]} /></div>;
+  return <div className="px-2 pt-4"><EditFamilyMembers userId={user.id} familyMembers={user.FamilyMembers||[]} /></div>;
 }

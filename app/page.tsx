@@ -1,14 +1,13 @@
 import { poppins } from "@/lib/fonts";
-import Image from "next/image";
 import Link from "next/link";
 
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="flex  flex-col items-center justify-between p-24 bg-gradient-to-r from-orange-50 to-slate-100">
       
 
-      <div className={`${poppins.className} text-5xl relative z-[-1] flex justify-center text-center`}>
+      <div className={`${poppins.className} text-5xl relative  flex justify-center text-center`}>
         Welcome to Alumni Portal
       </div>
 

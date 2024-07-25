@@ -47,8 +47,10 @@ import { ConfirmationDialog } from "../confirmation-dialog";
 
 export function EditEmploymentHistory({
   empHistory,
+  userId
 }: {
   empHistory: EmploymentHistory[];
+  userId:string
 }) {
   const [history, setHistory] = useState<EmploymentHistory[]>([]);
   const [error, setError] = useState("");
@@ -78,7 +80,7 @@ export function EditEmploymentHistory({
       const data = await updateEmploymentHistory(history as any); // Elements in history might have extra fields when fetched from database
       if (data && data.success) {
         setSuccess("Employment History Updated Successfully!");
-        router.push("/profile");
+        router.push(`/profile/${userId}`);
       }
     } catch (error) {
       setError("Something Went Wrong!");
