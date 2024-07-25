@@ -7,8 +7,10 @@ import { useEffect, useRef } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { usePathname } from "next/navigation";
 import { sidebarLinks } from "@/config/sidebarLinks";
+import { SessionUser } from "@/types/user";
+import { FaRegUserCircle } from "react-icons/fa";
 
-export const SideBar = () => {
+export const SideBar = ({ user }: { user: SessionUser }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(false);
   const pathname = usePathname();
@@ -33,7 +35,7 @@ export const SideBar = () => {
     };
   }, []);
 
-// To Make sure in small screens, sidebar gets closed when touched anywhere else
+  // To Make sure in small screens, sidebar gets closed when touched anywhere else
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -96,7 +98,7 @@ export const SideBar = () => {
             {sidebarLinks.map((link) => {
               const LinkIcon = link.icon;
               return (
-                <li key={link.name+link.href}>
+                <li key={link.name + link.href}>
                   <Link
                     href={link.href}
                     className={clsx(
@@ -104,8 +106,7 @@ export const SideBar = () => {
                       {
                         "bg-slate-500 text-white hover:bg-slate-500":
                           pathname === link.href,
-                          "  hover:bg-slate-400":
-                          pathname !== link.href,
+                        "  hover:bg-slate-400": pathname !== link.href,
                       }
                     )}
                   >
@@ -115,6 +116,23 @@ export const SideBar = () => {
                 </li>
               );
             })}
+
+            <li >
+              <Link
+                href={`/profile/${user.id}`}
+                className={clsx(
+                  "flex items-center gap-x-3.5 py-2 px-2.5  text-gray-700 rounded-lg  hover:text-white dark:bg-neutral-700 dark:text-white",
+                  {
+                    "bg-slate-500 text-white hover:bg-slate-500":
+                      pathname === `/profile/${user.id}`,
+                    "  hover:bg-slate-400": pathname !== `/profile/${user.id}`,
+                  }
+                )}
+              >
+                <FaRegUserCircle />
+                Profile
+              </Link>
+            </li>
           </ul>
         </nav>
         {/* End Navigation Items */}

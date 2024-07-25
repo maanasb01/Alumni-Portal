@@ -1,6 +1,5 @@
 import { RiCommunityLine } from "react-icons/ri";
 import { RiHome3Line } from "react-icons/ri";
-import { FaRegUserCircle } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
 
 export const sidebarLinks = [
@@ -18,10 +17,5 @@ export const sidebarLinks = [
     name: "Organization",
     icon: RiCommunityLine,
     href: "/organization",
-  },
-  {
-    name: "Profile",
-    icon: FaRegUserCircle,
-    href: "/profile",
   },
 ];
