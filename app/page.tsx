@@ -1,35 +1,27 @@
 import { poppins } from "@/lib/fonts";
 import Link from "next/link";
 
-
 export default function Home() {
   return (
-    <main className="flex  flex-col items-center justify-between p-24 bg-gradient-to-r from-orange-50 to-slate-100 h-full">
-      
-
-      <div className={`${poppins.className} text-5xl relative  flex justify-center text-center`}>
-        Welcome to Alumni Portal
-      </div>
-
-      <div className="mb-32 ">
-        <Link
-          href="/register"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors"
+    <main className="flex flex-col items-center justify-center h-full bg-gradient-to-r from-slate-200 to-slate-300">
+      <section className="text-center py-16 px-6">
+        <h1
+          className={`${poppins.className} text-5xl font-bold text-gray-900 mb-4`}
         >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Get Started{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-
-          </h2>
-          <p className="px-1 m-0 max-w-[30ch] text-sm opacity-50">
-            Register Here
-          </p>
-        </Link>
-
-        
-      </div>
+          Welcome to the Alumni Portal
+        </h1>
+        <p className="text-lg text-gray-700 mb-8 max-w-2xl mx-auto">
+          Join your organizations, connect with fellow alumni, share updates,
+          create events, and stay actively engaged.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Link href="/register">
+            <button className="relative inline-flex items-center px-8 py-4 font-semibold text-white bg-gradient-to-r from-teal-500 to-blue-600 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+              Get Started
+            </button>
+          </Link>
+        </div>
+      </section>
     </main>
   );
 }
