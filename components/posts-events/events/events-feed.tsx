@@ -101,6 +101,7 @@ export function EventFeed({ user,showCreateOption,showOnlyUsers }: { user: Sessi
               if(events.length === index+1){
 
                 return <Event
+                editable={showCreateOption}
                 ref={lastPostRef}
                 key={event.id}
                 event={event}
@@ -112,6 +113,7 @@ export function EventFeed({ user,showCreateOption,showOnlyUsers }: { user: Sessi
               }
 
               return <Event
+              editable={showCreateOption}
                 key={event.id}
                 event={event}
                 user={user}

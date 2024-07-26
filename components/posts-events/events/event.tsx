@@ -18,12 +18,14 @@ export const Event = forwardRef(
       events,
       setEvents,
       handleDelete,
+      editable
     }: {
       event: FeedEventType;
       user: SessionUser;
       events: FeedEventType[];
       setEvents: Dispatch<SetStateAction<FeedEventType[]>>;
       handleDelete: (id: string) => void;
+      editable:boolean
     },
     ref: LegacyRef<HTMLDivElement> | undefined
   ) => {
@@ -46,7 +48,7 @@ export const Event = forwardRef(
               </div>
             </div>
             {isOrganizer && (
-              <div className="mt-4 flex space-x-4">
+              editable && <div className="mt-4 flex space-x-4">
                 <EventDialog event={event} events={events} setEvents={setEvents}>
                   <button className="flex items-center text-blue-500 hover:text-blue-700">
                     <FiEdit className="mr-1" /> Edit

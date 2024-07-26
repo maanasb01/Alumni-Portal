@@ -21,12 +21,14 @@ export const Post = forwardRef(
       posts,
       setPosts,
       handleDelete,
+      editable
     }: {
       post: FeedPostType;
       user: SessionUser;
       posts: FeedPostType[];
       setPosts: Dispatch<SetStateAction<FeedPostType[]>>;
       handleDelete: (id: string) => void;
+      editable:boolean
     },
     ref: LegacyRef<HTMLDivElement> | undefined
   ) => {
@@ -57,7 +59,7 @@ export const Post = forwardRef(
             </div>
           </div>
           {post.authorId === user.id && (
-            <div className="flex space-x-2">
+            editable && <div className="flex space-x-2">
               <PostDialog post={post} posts={posts} setPosts={setPosts}>
                 <button className="text-gray-500 hover:text-gray-700">
                   <FiEdit size={20} />
